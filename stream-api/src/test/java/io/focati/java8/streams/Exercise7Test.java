@@ -5,6 +5,7 @@ import io.focati.java8.tools.annotation.Medium;
 import io.focati.java8.tools.datasets.ClassicOnlineStore;
 import io.focati.java8.tools.entity.Customer;
 import io.focati.java8.tools.entity.Shop;
+import io.focati.java8.tools.entity.ShopItem;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -25,8 +26,9 @@ class Exercise7Test {
     void averageAge() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        IntStream ageStream = null; // A compléter
-        OptionalDouble average = null; // A compléter
+        IntStream ageStream = customerList.stream()
+                .mapToInt(Customer::getAge);
+        OptionalDouble average = ageStream.average();
 
         assertThat(average.getAsDouble()).isEqualTo(28.7);
     }
@@ -39,8 +41,10 @@ class Exercise7Test {
     void howMuchToBuyAllItems() {
         List<Shop> shopList = ClassicOnlineStore.getData().getShops();
 
-        LongStream priceStream = null;
-        long priceSum = 0;
+        LongStream priceStream = shopList.stream()
+                .flatMapToLong(shop -> shop.getItems().stream()
+                .mapToLong(ShopItem::getPrice));
+        long priceSum = priceStream.sum();
 
         assertThat(priceSum).isEqualTo(60930L);
     }

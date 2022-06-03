@@ -19,7 +19,7 @@ class Exercise4Test {
     void firstRegistrant() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Optional<Customer> firstCustomer = null; // A compléter
+        Optional<Customer> firstCustomer = customerList.stream().findFirst();
 
         assertThat(firstCustomer.get()).isEqualTo(customerList.get(0));
     }
@@ -31,7 +31,8 @@ class Exercise4Test {
     void isThereAnyoneOlderThan40() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        boolean olderThan40Exists = true; // A modifier
+        boolean olderThan40Exists = customerList.stream()
+                        .anyMatch(customer -> customer.getAge() > 40);
 
         assertThat(olderThan40Exists).isFalse();
     }
@@ -43,7 +44,8 @@ class Exercise4Test {
     void isEverybodyOlderThan20() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        boolean allOlderThan20 = false; // A modifier
+        boolean allOlderThan20 = customerList.stream()
+                        .allMatch(customer -> customer.getAge() > 20);
 
         assertThat(allOlderThan20).isTrue();
     }
@@ -55,7 +57,8 @@ class Exercise4Test {
     void everyoneWantsSomething() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        boolean everyoneHaveSomeItems = false; // A modifier
+        boolean everyoneHaveSomeItems = customerList.stream()
+                        .noneMatch(customer -> customer.getItems().isEmpty());
 
         assertThat(everyoneHaveSomeItems).isTrue();
     }

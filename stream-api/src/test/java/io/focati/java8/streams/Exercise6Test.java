@@ -17,7 +17,7 @@ class Exercise6Test {
     @Easy @Test
     void streamFromValues() {
 
-        Stream<String> abcStream = null; // A compléter
+        Stream<String> abcStream = Stream.of("a","b","c");
 
         List<String> abcList = abcStream.collect(Collectors.toList());
         assertThat(abcList).containsExactly("a", "b", "c");
@@ -28,7 +28,7 @@ class Exercise6Test {
      */
     @Easy @Test
     void numberStream() {
-        Stream<Integer> numbers = null; // A compléter
+        Stream<Integer> numbers = Stream.iterate(0, val -> val + 3).limit(10);
 
         List<Integer> numbersList = numbers.collect(Collectors.toList());
         assertThat(numbersList).containsExactly(0, 3, 6, 9, 12, 15, 18, 21, 24, 27);

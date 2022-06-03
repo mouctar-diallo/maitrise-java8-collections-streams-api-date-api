@@ -24,7 +24,8 @@ class Exercise2Test {
     void sortByAge() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Stream<Integer> sortedAgeStream = null; // A compléter
+        Stream<Integer> sortedAgeStream = customerList.stream()
+                .map(Customer::getAge).sorted();
 
         List<Integer> sortedAgeList = sortedAgeStream.collect(Collectors.toList());
         assertThat(sortedAgeList).containsExactly(21, 22, 22, 26, 27, 28, 32, 35, 36, 38);
@@ -37,8 +38,10 @@ class Exercise2Test {
     void descSortByAge() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Comparator<Integer> descOrder = null; // A compléter
-        Stream<Integer> sortedAgeStream = null; // A compléter
+        Comparator<Integer> descOrder = Comparator.reverseOrder();
+        Stream<Integer> sortedAgeStream = customerList.stream()
+                        .map(Customer::getAge)
+                        .sorted(descOrder);
 
         assertThat(AssertUtils.isLambda(descOrder));
         List<Integer> sortedAgeList = sortedAgeStream.collect(Collectors.toList());
@@ -53,7 +56,10 @@ class Exercise2Test {
     void top3RichCustomer() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Stream<String> top3RichCustomerStream = null; // A compléter
+        Stream<String> top3RichCustomerStream = customerList.stream()
+                .sorted(Comparator.comparing(Customer::getBudget).reversed())
+                .map(Customer::getName)
+                .limit(3);
 
         List<String> top3RichCustomerList = top3RichCustomerStream.collect(Collectors.toList());
         assertThat(top3RichCustomerList).containsExactlyInAnyOrder("Diana", "Andrew", "Chris");
@@ -66,7 +72,9 @@ class Exercise2Test {
     void distinctAge() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Stream<Integer> distinctAgeStream = null; // A compléter
+        Stream<Integer> distinctAgeStream = customerList.stream()
+                .map(Customer::getAge)
+                .distinct();
 
         List<Integer> distinctAgeList = distinctAgeStream.collect(Collectors.toList());
         assertThat(distinctAgeList).containsExactlyInAnyOrder(22, 27, 28, 38, 26, 32, 35, 21, 36);
@@ -79,8 +87,11 @@ class Exercise2Test {
     void itemsCustomersWantToBuy() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Function<Customer, Stream<CustomerItem>> getItemStream = null; // A compléter
-        Stream<String> itemStream = null; // A compléter
+        Function<Customer, Stream<CustomerItem>> getItemStream = customer -> customer.getItems().stream();
+        Stream<String> itemStream = customerList.stream()
+                        .flatMap(getItemStream)
+                        .map(CustomerItem::getName);
+
 
         assertThat(AssertUtils.isLambda(getItemStream)).isTrue();
         List<String> itemList = itemStream.collect(Collectors.toList());

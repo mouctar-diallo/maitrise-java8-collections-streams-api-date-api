@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,7 +22,8 @@ class Exercise3Test {
     void howManyItems() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        long sum = 0L; // A compléter
+        long sum = customerList.stream()
+                .flatMap(customer -> customer.getItems().stream()).count();
 
         assertThat(sum).isEqualTo(32L);
     }
@@ -34,9 +36,10 @@ class Exercise3Test {
     void richestCustomer() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-
-        Comparator<Integer> comparator = null; // A compléter
-        Optional<Integer> richestCustomer = null; // A compléter
+        Comparator<Integer> comparator = Comparator.naturalOrder();
+        Optional<Integer> richestCustomer = customerList.stream()
+                .map(Customer::getBudget)
+                .max(comparator);
 
         assertThat(comparator.getClass().getSimpleName()).isEqualTo("NaturalOrderComparator");
         assertThat(richestCustomer.get()).isEqualTo(12000);
@@ -50,8 +53,9 @@ class Exercise3Test {
     void youngestCustomer() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Comparator<Customer> comparator = null; // A compléter
-        Optional<Customer> youngestCustomer = null; // A compléter
+        Comparator<Customer> comparator = Comparator.comparing(Customer::getAge);
+        Optional<Customer> youngestCustomer = customerList.stream()
+                        .min(comparator);
 
         assertThat(youngestCustomer.get()).isEqualTo(customerList.get(8));
     }

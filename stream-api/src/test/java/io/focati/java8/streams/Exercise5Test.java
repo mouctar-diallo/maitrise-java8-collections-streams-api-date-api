@@ -6,10 +6,7 @@ import io.focati.java8.tools.datasets.ClassicOnlineStore;
 import io.focati.java8.tools.entity.Customer;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +20,9 @@ class Exercise5Test {
     void nameList() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        List<String> nameList = null; // A compléter
+        List<String> nameList = customerList.stream()
+                        .map(Customer::getName)
+                        .collect(Collectors.toList());
 
         assertThat(nameList).containsExactlyInAnyOrder("Joe", "Steven", "Patrick", "Diana", "Chris", "Kathy",
             "Alice", "Andrew", "Martin", "Amy");
@@ -36,7 +35,10 @@ class Exercise5Test {
     void ageSet() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Set<Integer> ageSet = null; // A compléter
+        Set<Integer> ageSet = customerList.stream()
+                        .map(Customer::getAge)
+                        .distinct()
+                        .collect(Collectors.toSet());
 
         assertThat(ageSet)
             .hasSize(9)
@@ -50,7 +52,9 @@ class Exercise5Test {
     void nameInCsv() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        String string = null; // A compléter
+        String string = customerList.stream()
+                        .map(Customer::getName)
+                        .collect(Collectors.joining(",", "[", "]"));
 
         assertThat(string).isEqualTo("[Joe,Steven,Patrick,Diana,Chris,Kathy,Alice,Andrew,Martin,Amy]");
     }
@@ -62,7 +66,8 @@ class Exercise5Test {
     void oldestCustomer() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Optional<Customer> oldestCustomer = null; // A compléter
+        Optional<Customer> oldestCustomer = customerList.stream()
+                        .collect(Collectors.maxBy(Comparator.comparing(Customer::getAge)));
 
         assertThat(oldestCustomer.get()).isEqualTo(customerList.get(3));
     }
@@ -75,7 +80,8 @@ class Exercise5Test {
     void ageDistribution() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Map<Integer, Long> ageDistribution = null; // A compléter
+        Map<Integer, Long> ageDistribution = customerList.stream()
+                        .collect(Collectors.groupingBy(Customer::getAge, Collectors.counting()));
 
         assertThat(ageDistribution).hasSize(9);
         ageDistribution.forEach((k, v) -> {

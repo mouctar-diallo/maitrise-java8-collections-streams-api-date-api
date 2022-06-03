@@ -4,19 +4,17 @@ import io.focati.java8.tools.annotation.Difficult;
 import io.focati.java8.tools.annotation.Medium;
 import io.focati.java8.tools.datasets.ClassicOnlineStore;
 import io.focati.java8.tools.entity.Customer;
+import io.focati.java8.tools.entity.CustomerItem;
 import io.focati.java8.tools.utils.CollectorImpl;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,10 +28,10 @@ class Exercise9Test {
     void simplestStringJoin() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Supplier<Object> supplier = null; // A compléter
-        BiConsumer<Object, String> accumulator = null; // A compléter
-        BinaryOperator<Object> combiner = null; // A compléter
-        Function<Object, String> finisher = null; // A compléter
+        Supplier<StringJoiner> supplier = () -> new StringJoiner(",");
+        BiConsumer<StringJoiner, String> accumulator = StringJoiner::add;
+        BinaryOperator<StringJoiner> combiner = null; // A compléter
+        Function<StringJoiner, String> finisher = StringJoiner::toString;
 
         Collector<String, ?, String> toCsv =
             new CollectorImpl<>(supplier, accumulator, combiner, finisher, Collections.emptySet());
@@ -50,10 +48,32 @@ class Exercise9Test {
     void mapKeyedByItems() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Supplier<Object> supplier = null; // A compléter
-        BiConsumer<Object, Customer> accumulator = null; // A compléter
-        BinaryOperator<Object> combiner = null; // A compléter
-        Function<Object, Map<String, Set<String>>> finisher = null; // A compléter
+        Supplier<Map<String, Set<String>>> supplier = HashMap::new;
+        BiConsumer<Map<String, Set<String>>, Customer> accumulator = (mapper, custumer) -> {
+            //recuperons les articles a vendre
+            List<String> itemsOnSale = custumer.getItems().stream()
+                    .map(CustomerItem::getName)
+                    .collect(Collectors.toList());
+            //ajoutons a chaque article le nombre des clients voulant l'acheter
+            itemsOnSale.forEach((itemName) -> {
+                Set<String> customersWantToBuyItemName = customerList.stream()
+                        .filter(customer -> customer.getItems().stream()
+                        .anyMatch(customerItem -> customerItem.getName().equals(itemName)))
+                        .map(Customer::getName)
+                        .collect(Collectors.toSet());
+
+                mapper.put(itemName, customersWantToBuyItemName);
+
+            });
+
+        };
+        //Fusion des elements dans le mapper1
+        BinaryOperator<Map<String, Set<String>>> combiner = (mapper1, mapper2) -> {
+            mapper1.putAll(mapper2);
+            return mapper1;
+        };
+
+        Function<Map<String, Set<String>>, Map<String, Set<String>>> finisher = stringSetMap -> stringSetMap;
 
         Collector<Customer, ?, Map<String, Set<String>>> toItemAsKey =
             new CollectorImpl<>(supplier, accumulator, combiner, finisher, EnumSet.of(

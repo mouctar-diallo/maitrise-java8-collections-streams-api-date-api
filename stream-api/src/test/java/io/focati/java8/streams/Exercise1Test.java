@@ -26,8 +26,9 @@ class Exercise1Test {
     void findRichCustomers() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Predicate<Customer> richCustomerCondition = null; // A compléter
-        Stream<Customer> richCustomerStream = null; // A compléter
+        Predicate<Customer> richCustomerCondition = customer -> customer.getBudget() > 10000;
+        Stream<Customer> richCustomerStream = customerList.stream()
+                        .filter(richCustomerCondition);
 
         assertThat(AssertUtils.isLambda(richCustomerCondition)).isTrue();
         List<Customer> richCustomer = richCustomerStream.collect(Collectors.toList());
@@ -44,8 +45,9 @@ class Exercise1Test {
     void howOldAreTheCustomers() {
         List<Customer> customerList = ClassicOnlineStore.getData().getCustomers();
 
-        Function<Customer, Integer> getAgeFunction = null; // A compléter
-        Stream<Integer> ageStream = null; // A compléter
+        Function<Customer, Integer> getAgeFunction = Customer::getAge;
+        Stream<Integer> ageStream = customerList.stream()
+                        .map(getAgeFunction);
 
         assertThat(AssertUtils.isLambda(getAgeFunction)).isTrue();
         List<Integer> ages = ageStream.collect(Collectors.toList());

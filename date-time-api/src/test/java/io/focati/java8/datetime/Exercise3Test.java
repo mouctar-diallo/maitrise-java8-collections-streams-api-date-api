@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +20,8 @@ class Exercise3Test {
      */
     @Easy @Test
     void localDateTimeOf() {
-        LocalDateTime localDateTime = null; // A compléter
+        LocalDateTime localDateTime = LocalDateTime
+                .of(2022,6,20,23,7,30);
 
         assertThat(localDateTime.toString()).isEqualTo("2022-06-20T23:07:30");
     }
@@ -27,7 +31,7 @@ class Exercise3Test {
      */
     @Easy @Test
     void localDateTimeParse() {
-        LocalDateTime localDateTime = null; // A compléter
+        LocalDateTime localDateTime = LocalDateTime.parse("2022-06-20T23:07:30");
 
         assertThat(localDateTime.toString()).isEqualTo("2022-06-20T23:07:30");
     }
@@ -40,7 +44,8 @@ class Exercise3Test {
     void localTimeWith() {
         LocalDateTime ldt = DateAndTimes.LDT_20150618_23073050;
 
-        LocalDateTime localDateTime = null; // A compléter
+        LocalDateTime localDateTime = ldt.with(TemporalAdjusters.firstDayOfNextMonth())
+                .truncatedTo(ChronoUnit.HOURS);
 
         assertThat(localDateTime.toString()).isEqualTo("2015-07-01T23:00");
     }
@@ -52,7 +57,7 @@ class Exercise3Test {
     void localDatePlusMinus() {
         LocalDateTime ldt = DateAndTimes.LDT_20150618_23073050;
 
-        LocalDateTime localDateTime = null; // A compléter
+        LocalDateTime localDateTime = ldt.plusMonths(10).minusHours(5);
 
         assertThat(localDateTime.toString()).isEqualTo("2016-04-18T18:07:30.500");
     }
@@ -64,7 +69,8 @@ class Exercise3Test {
     void localDateTimeFormat() {
         LocalDateTime ldt = DateAndTimes.LDT_20150618_23073050;
 
-        String strLdt = null; // A compléter
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
+        String strLdt = ldt.format(formatter);
 
         assertThat(strLdt).isEqualTo("2015_06_18_23_07_30");
     }
@@ -76,8 +82,8 @@ class Exercise3Test {
     void toLocalDateAndTime() {
         LocalDateTime ldt = DateAndTimes.LDT_20150618_23073050;
 
-        LocalDate localDate = null; // A compléter
-        LocalTime localTime = null; // A compléter
+        LocalDate localDate = ldt.toLocalDate();
+        LocalTime localTime = ldt.toLocalTime();
 
         assertThat(localDate.toString()).isEqualTo("2015-06-18");
         assertThat(localTime.toString()).isEqualTo("23:07:30.500");
@@ -93,8 +99,8 @@ class Exercise3Test {
         LocalDate ld = DateAndTimes.LD_20150618;
         LocalTime lt = DateAndTimes.LT_23073050;
 
-        LocalDateTime localDateTime1 = null;
-        LocalDateTime localDateTime2 = null;
+        LocalDateTime localDateTime1 = ld.atTime(lt);
+        LocalDateTime localDateTime2 = lt.atDate(ld);
 
         assertThat(localDateTime1.toString()).isEqualTo("2015-06-18T23:07:30.500");
         assertThat(localDateTime1.isEqual(localDateTime2)).isTrue();

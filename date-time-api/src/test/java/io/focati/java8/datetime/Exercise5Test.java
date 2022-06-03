@@ -20,7 +20,7 @@ class Exercise5Test {
     void localDateTime2Timestamp() {
         LocalDateTime ldt = DateAndTimes.LDT_20150618_23073050;
 
-        Timestamp timestamp = null; // A compléter
+        Timestamp timestamp = Timestamp.valueOf(ldt);
 
         assertThat(timestamp.toString()).isEqualTo("2015-06-18 23:07:30.5");
     }
@@ -32,7 +32,7 @@ class Exercise5Test {
     void localDate2date() {
         LocalDate ld = DateAndTimes.LD_20150618;
 
-        Date date = null; // A compléter
+        Date date = Date.valueOf(ld);
 
         assertThat(date.toString()).isEqualTo("2015-06-18");
     }
@@ -44,7 +44,7 @@ class Exercise5Test {
     void timestamp2LocalDateTime() {
         Timestamp timestamp = DateAndTimes.OLD_TIMESTAMP_20150618_23073050;
 
-        LocalDateTime localDateTime = null; // A compléter
+        LocalDateTime localDateTime = timestamp.toLocalDateTime();
 
         assertThat(localDateTime.toString()).isEqualTo("2015-06-18T23:07:30.500");
     }
@@ -56,7 +56,7 @@ class Exercise5Test {
     void date2LocalDate() {
         Date date = DateAndTimes.OLD_DATE_20150618;
 
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = date.toLocalDate();
 
         assertThat(localDate.toString()).isEqualTo("2015-06-18");
     }

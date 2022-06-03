@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
+import java.time.temporal.TemporalAdjusters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +20,7 @@ class Exercise1Test {
     @Easy @Test
     void localDateOf() {
 
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = LocalDate.of(2022,6,18);
 
         assertThat(localDate.toString()).isEqualTo("2022-06-18");
     }
@@ -31,7 +32,7 @@ class Exercise1Test {
     void localDateParse() {
 
         String date = "2022-06-18";
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = LocalDate.parse(date);
 
         assertThat(localDate.toString()).isEqualTo("2022-06-18");
     }
@@ -43,7 +44,7 @@ class Exercise1Test {
     void localDateWith() {
         LocalDate ld = DateAndTimes.LD_20150618;
 
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = ld.withYear(2022);
 
         assertThat(localDate.getYear()).isEqualTo(2022);
         assertThat(localDate.getMonth()).isEqualTo(ld.getMonth());
@@ -57,7 +58,7 @@ class Exercise1Test {
     void localDateWithAdjuster() {
         LocalDate ld = DateAndTimes.LD_20150618;
 
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = ld.with(TemporalAdjusters.firstDayOfNextYear());
 
         assertThat(localDate.getYear()).isEqualTo(ld.getYear() + 1);
         assertThat(localDate.getMonth()).isEqualTo(Month.JANUARY);
@@ -71,7 +72,7 @@ class Exercise1Test {
     void localDatePlus() {
         LocalDate ld = DateAndTimes.LD_20150618;
 
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = ld.plusMonths(10);
 
         assertThat(localDate.getYear()).isEqualTo(ld.getYear() + 1);
         assertThat(localDate.getMonth()).isEqualTo(Month.APRIL);
@@ -85,7 +86,7 @@ class Exercise1Test {
     void localDateMinus() {
         LocalDate ld = DateAndTimes.LD_20150618;
 
-        LocalDate localDate = null; // A compléter
+        LocalDate localDate = ld.minusDays(10);
 
         assertThat(localDate.getYear()).isEqualTo(ld.getYear());
         assertThat(localDate.getMonth()).isEqualTo(ld.getMonth());
@@ -101,8 +102,8 @@ class Exercise1Test {
     void localDatePlusPeriod() {
         LocalDate ld = DateAndTimes.LD_20150618;
 
-        Period period = null; // A compléter
-        LocalDate localDate = null; // A compléter
+        Period period = Period.of(1,2,3);
+        LocalDate localDate = ld.plus(period);
 
         assertThat(localDate.getYear()).isEqualTo(ld.getYear() + 1);
         assertThat(period.getMonths()).isEqualTo(2);
@@ -117,9 +118,9 @@ class Exercise1Test {
         LocalDate ld = DateAndTimes.LD_20150618;
         LocalDate ld2 = DateAndTimes.LD_20150807;
 
-        boolean isAfter0618 = false; // A modifier
+        boolean isAfter0618 = ld.isAfter(ld2);
 
-        assertThat(isAfter0618).isTrue();
+        assertThat(isAfter0618).isFalse();
     }
 
     /**
@@ -130,7 +131,7 @@ class Exercise1Test {
         LocalDate ld = DateAndTimes.LD_20150618;
         LocalDate ld2 = DateAndTimes.LD_20150807;
 
-        Period period = null; // A compléter
+        Period period = Period.between(ld, ld2);
 
         assertThat(period.getYears()).isEqualTo(0);
         assertThat(period.getMonths()).isEqualTo(1);
